@@ -9,10 +9,21 @@ class Star:
         self.position = ra, dec
         self.mag = mag
 
+    def InTile(self,Tiles):
+        for t in Tiles:
+            if (Tiles.ra_bounds[0] <= self.position[0] <= Tiles.ra_bounds[1]) and (Tiles.dec_bounds[0] <= self.position[1] <= Tiles.dec_bounds[1]):
+                t.AddStar(self)
+
 class Tile:
-    def __init__(self, ra_bounds, dec_bounds):
+    def __init__(self, ra_bounds, dec_bounds, index):
         self.ra_bounds = ra_bounds
         self.dec_bounds= dec_bounds
+        self.stars=[]
+        self.index = index
+
+    def AddStar(self, Star):
+        self.stars.append(Star)
+
 
 
 def sizesBall(minim_mag):
