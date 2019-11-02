@@ -11,7 +11,8 @@ class Star:
 
 class Tile:
     def __init__(self, ra_bounds, dec_bounds):
-        self.bounds = ra_bounds, dec_bounds
+        self.ra_bounds = ra_bounds
+        self.dec_bounds= dec_bounds
 
 
 def sizesBall(minim_mag):
