@@ -52,14 +52,28 @@ print(max(Mag))
 #Mag_norm = min_max_scaler.fit_transform(x)
 
 #print(x)
-
 ra = np.asarray(df['RA'])
+ra = (ra/24)*360 #to degrees
 dec = np.asarray(df['Dec'])
-plt.scatter((ra/24)*360,dec,marker='*',alpha=0.7)
+plt.scatter(ra,dec,marker='*',alpha=0.7)
 
 #plt.scatter(88.79,7.40,c='red',marker='*',alpha=0.3)
 #plt.scatter(84.04,-1.20,c='red',marker='*',alpha=0.3)
 #plt.scatter(78.63,-8.20,c='red',marker='*',alpha=0.3)
+#plt.show()
 
+tileDec=np.linspace(-90, 90, 36)
+tileRA=np.linspace(0, 360, 72)
+print(ra)
+print(dec)
 
-plt.show()
+tiles=[]
+
+for i,val in enumerate(tileRA):
+    for j, val2 in enumerate(tileDec):
+        if (ra[i] > tileRA[i] and ra[i+1] < tileRA[i+1]) and (dec[j] > tileDec[j] and dec[i+1] < tileDec[i+1]):
+            tiles[i].append(ra[i], dec[i], mag[i])
+
+#plt.plot(tiles[2][0], tiles[2][1])
+print(tiles)
+#plt.show()
