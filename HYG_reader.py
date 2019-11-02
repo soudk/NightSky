@@ -31,20 +31,21 @@ Belt = SkyCoord('05h36m12.8s -01d12m07.00s')
 Rigel = SkyCoord('05h14m32.3s -08d12m06.00s')
 
 #data = np.loadtxt('stellar_data.csv',delimiter=',')
-data2 = pd.read_csv('hygfull.csv',usecols=['RA','Dec','Mag'])
-ra = np.asarray(data2['RA'])
-dec = np.asarray(data2['Dec'])
-mag = np.asarray(data2['Mag'])
+df = pd.read_csv('hygfull.csv',usecols=['RA','Dec','Mag'])
+
 
 
 #sizes = sizesBall(mag)
-
+df = df[df.Mag <= 6.5] #Only stars visible by nake eye
 #print (sizes)
-plt.scatter((ra/24)*360,dec,marker='*',alpha=0.3)
+ra = np.asarray(df['RA'])
+dec = np.asarray(df['Dec'])
+mag = np.asarray(df['Mag'])
+plt.scatter((ra/24)*360,dec,marker='*',alpha=0.7)
 
-plt.scatter(88.79,7.40,c='red',marker='*',alpha=0.3)
-plt.scatter(84.04,-1.20,c='red',marker='*',alpha=0.3)
-plt.scatter(78.63,-8.20,c='red',marker='*',alpha=0.3)
+#plt.scatter(88.79,7.40,c='red',marker='*',alpha=0.3)
+#plt.scatter(84.04,-1.20,c='red',marker='*',alpha=0.3)
+#plt.scatter(78.63,-8.20,c='red',marker='*',alpha=0.3)
 
 
 plt.show()
