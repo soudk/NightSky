@@ -4,6 +4,15 @@ from astropy.coordinates import SkyCoord
 import pandas as pd
 from sklearn import preprocessing
 
+class Star:
+    def __init__(self, ra, dec, mag,):
+        self.position = ra, dec
+        self.mag = mag
+
+class Tile:
+    def __init__(self, ra_bounds, dec_bounds):
+        self.bounds = ra_bounds, dec_bounds
+
 
 def sizesBall(minim_mag):
     s = [None]*len(minim_mag)
@@ -66,6 +75,9 @@ tileDec=np.linspace(-90, 90, 36)
 tileRA=np.linspace(0, 360, 72)
 print(ra)
 print(dec)
+
+
+
 
 tiles=[]
 
