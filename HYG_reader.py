@@ -2,6 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from astropy.coordinates import SkyCoord
 import pandas as pd
+from sklearn import preprocessing
+
 
 def sizesBall(minim_mag):
     s = [None]*len(minim_mag)
@@ -36,11 +38,23 @@ df = pd.read_csv('hygfull.csv',usecols=['RA','Dec','Mag'])
 
 
 #sizes = sizesBall(mag)
-df = df[df.Mag <= 6.5] #Only stars visible by nake eye
+df = df[df.Mag <= 6.5] #Only stars visible by naked eye
 #print (sizes)
 ra = np.asarray(df['RA'])
 dec = np.asarray(df['Dec'])
-mag = np.asarray(df['Mag'])
+Mag = np.asarray(df['Mag'])
+
+Mag=np.abs(Mag)/max(Mag)
+print(max(Mag))
+
+#x = df.Mag #returns a numpy array
+#min_max_scaler = preprocessing.MinMaxScaler()
+#Mag_norm = min_max_scaler.fit_transform(x)
+
+#print(x)
+
+ra = np.asarray(df['RA'])
+dec = np.asarray(df['Dec'])
 plt.scatter((ra/24)*360,dec,marker='*',alpha=0.7)
 
 #plt.scatter(88.79,7.40,c='red',marker='*',alpha=0.3)
