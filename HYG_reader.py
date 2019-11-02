@@ -65,8 +65,11 @@ ra = np.asarray(df['RA'])
 dec = np.asarray(df['Dec'])
 Mag = np.asarray(df['Mag'])
 
-Mag=np.abs(Mag)/max(Mag)
-print(max(Mag))
+for i,m in enumerate(Mag):
+    Mag[i] = 1.0 - ((m+abs(min(Mag)))/(max(Mag)+abs(min(Mag))))
+
+#Mag=np.abs(Mag)/max(Mag)
+print(min(Mag), max(Mag))
 
 #x = df.Mag #returns a numpy array
 #min_max_scaler = preprocessing.MinMaxScaler()
