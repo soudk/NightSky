@@ -31,7 +31,7 @@ for i,file in enumerate(glob.glob("tiles/*.jpg")):
     side_length_factor = np.random.random()*3 + 1
     #print(angle)
     rot_image = imutils.rotate(image, angle)
-    rot_image = imutils.resize(rot_image, width = width*side_length_factor, height = height*side_length_factor)
+    rot_image = imutils.resize(rot_image, width = int(width*side_length_factor), height = int(height*side_length_factor))
     
     scipy.misc.toimage(rot_image, cmin=0.0, cmax=1.0).save('rot_tiles/' + str(split[1]) + '_'+ 'rot' +'_' +str(angle) + '.jpg')
 
