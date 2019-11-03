@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 from astropy.coordinates import SkyCoord
 import pandas as pd
 from sklearn import preprocessing
+import scipy.misc
+
 
 class Star:
     def __init__(self, ra, dec, mag):
@@ -54,8 +56,8 @@ def blur(tile):
     ra = tile.ra_bounds
     dec = tile.dec_bounds
     for s in stars: 
-        ra_diff = s.position[0] - ra[0]
-        dec_diff = s.position[1] - dec[0]
+        ra_diff = ra[0]-s.position[0]
+        dec_diff =  dec[0] - s.position[1] 
         pixels[int(ra_diff)][int(dec_diff)] = s.mag
     return pixels
 
@@ -108,10 +110,14 @@ ra = (ra/24)*360 #to degrees
 #Mag=np.abs(Mag)/max(Mag)
 #print(min(Mag), max(Mag))
 
-
 Stars, tiles = init()
-pizels = blur(tiles[-7])
-print (pizels)
+
+for i,tile in enumerate(tiles):
+    pizels = blur(tile)
+    scipy.misc.toimage(pizels, cmin=0.0, cmax=1.0).save('tiles/tile'+str(i)+'.jpg')
+
+
+
 
 
 
@@ -128,5 +134,3 @@ print (pizels)
 #plt.show()
 
 
-#plt.plot(tiles[2][0], tiles[2][1])
-#plt.show()
