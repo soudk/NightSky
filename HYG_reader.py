@@ -5,6 +5,7 @@ import pandas as pd
 from sklearn import preprocessing
 import scipy.misc
 
+
 WIDTH_SKY = 12
 HEIGHT_SKY = 12
 RESOLUTION_PER_TILE = 118
