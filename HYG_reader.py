@@ -5,22 +5,36 @@ import pandas as pd
 from sklearn import preprocessing
 import scipy.misc
 
+#Gridlines to specify how we split the night sky 
 WIDTH_SKY = 12
 HEIGHT_SKY = 12
+
+#The resolution of each tile
 RESOLUTION_PER_TILE = 118
+
+#To generate training data, we take each tile and shift it 
 OVERLAP = 0.1
 
 class Star:
+    """
+    Create a star object. Each object has a position of right-ascension and declination, and magnitude upon creation
+    """
     def __init__(self, ra, dec, mag):
         self.position = ra, dec
         self.mag = mag
 
     def InTile(self,Tiles):
+        """
+        Function that bins each star into a tile based on its location
+        """
         for t in Tiles:
             if (t.ra_bounds[0] <= self.position[0] <= t.ra_bounds[1]) and (t.dec_bounds[0] <= self.position[1] <= t.dec_bounds[1]):
                 t.AddStar(self)
 
 class Tile:
+    """
+    Creates a tile object, with specified right ascension bounds and declination bounds. 
+    """
     def __init__(self, ra_bounds, dec_bounds, index,resolution,shift,shift_type):
         self.ra_bounds = ra_bounds
         self.dec_bounds= dec_bounds
@@ -34,7 +48,7 @@ class Tile:
         self.stars.append(Star)
 
 def init():
-    tileDec=np.linspace(-90, 90, WIDTH_SKY+1)
+    tileDec=np.linspace(0, 180, WIDTH_SKY+1)
     tileRA=np.linspace(0, 360, HEIGHT_SKY+1)
 
     #Intializing tiles 
@@ -42,17 +56,15 @@ def init():
     for i in range(WIDTH_SKY*HEIGHT_SKY):
         c = i%(WIDTH_SKY)
         r = int(i/(WIDTH_SKY)) 
-        tiles.append(Tile((tileRA[r],tileRA[r+1]),(tileDec[c],tileDec[c+1]),i,RESOLUTION_PER_TILE,0,None))
+        tiles.append(Tile((tileRA[c],tileRA[c+1]),(tileDec[r]-90,tileDec[r+1]-90),i,RESOLUTION_PER_TILE,0,None))
         factor = 0.1
         while (factor<=0.9):
-            amount_shifted_RA = factor*np.abs((tileRA[r+1]-tileRA[r]))
-            amount_shifted_DEC = factor*np.abs((tileDec[c+1]-tileDec[c]))
-            if c==WIDTH_SKY-1:
-                tiles.append(Tile((tileRA[r]+amount_shifted_RA,tileRA[0]+amount_shifted_RA),(tileDec[c],tileDec[c+1]),i,RESOLUTION_PER_TILE,int(np.round(factor/0.1)),'RA'))
-            else:
-                tiles.append(Tile((tileRA[r]+amount_shifted_RA,tileRA[r+1]+amount_shifted_RA),(tileDec[c],tileDec[c+1]),i,RESOLUTION_PER_TILE,int(np.round(factor/0.1)),'RA'))
+            amount_shifted_RA = factor*np.abs((tileRA[c+1]-tileRA[c]))
+            amount_shifted_DEC = factor*np.abs((tileDec[r+1]-tileDec[r]))
+            
+            tiles.append(Tile(((tileRA[c]+amount_shifted_RA)%(360),(tileRA[c+1]+amount_shifted_RA)%(360)),(tileDec[r]-90,tileDec[r+1]-90),i,RESOLUTION_PER_TILE,int(np.round(factor/0.1)),'RA'))
             if r != HEIGHT_SKY-1:
-                tiles.append(Tile((tileRA[r],tileRA[r+1]),(tileDec[c]+amount_shifted_DEC,tileDec[c+1]+amount_shifted_DEC),i,RESOLUTION_PER_TILE,int(np.round(factor/0.1)),'DEC'))
+                tiles.append(Tile((tileRA[c],tileRA[c+1]),(tileDec[r]+amount_shifted_DEC-90,tileDec[r+1]+amount_shifted_DEC-90),i,RESOLUTION_PER_TILE,int(np.round(factor/0.1)),'DEC'))
             factor += 0.1
 
     Stars = []
@@ -81,8 +93,8 @@ def blur(tile):
                 ra_diff = ((s.position[0]-ra[0])/diff_ra)*RESOLUTION_PER_TILE
         else:
             ra_diff = ((s.position[0]-ra[0])/diff_ra)*RESOLUTION_PER_TILE
-        dec_diff =  ((s.position[1]-dec[0])/diff_dec)*RESOLUTION_PER_TILE
-        pixels[int(np.round(ra_diff%(RESOLUTION_PER_TILE-1)))][int(np.round(dec_diff%(RESOLUTION_PER_TILE-1)))] = s.mag
+        dec_diff =  ((dec[1] - s.position[1])/diff_dec)*RESOLUTION_PER_TILE
+        pixels[int(np.round(dec_diff%(RESOLUTION_PER_TILE-1)))][int(np.round(ra_diff%(RESOLUTION_PER_TILE-1)))] = s.mag
     return pixels
 
 
@@ -128,9 +140,14 @@ for tile in tiles:
 #x = df.Mag #returns a numpy array
 #min_max_scaler = preprocessing.MinMaxScaler()
 #Mag_norm = min_max_scaler.fit_transform(x)
-
+tileDec=np.linspace(-90, 90, WIDTH_SKY+1)
+tileRA=np.linspace(0, 360, HEIGHT_SKY+1)
 #print(x)
 plt.scatter(ra,dec,marker='*',alpha=0.7)
+for i in tileDec:
+    plt.axhline(i)
+for j in tileRA:
+    plt.axvline(j)
 plt.show()
 #plt.scatter(88.79,7.40,c='red',marker='*',alpha=0.3)
 #plt.scatter(84.04,-1.20,c='red',marker='*',alpha=0.3)
