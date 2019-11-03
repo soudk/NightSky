@@ -5,27 +5,62 @@ import pandas as pd
 from sklearn import preprocessing
 
 class Star:
-    def __init__(self, ra, dec, mag,):
+    def __init__(self, ra, dec, mag):
         self.position = ra, dec
         self.mag = mag
 
     def InTile(self,Tiles):
         for t in Tiles:
-            if (Tiles.ra_bounds[0] <= self.position[0] <= Tiles.ra_bounds[1]) and (Tiles.dec_bounds[0] <= self.position[1] <= Tiles.dec_bounds[1]):
+            if (t.ra_bounds[0] <= self.position[0] <= t.ra_bounds[1]) and (t.dec_bounds[0] <= self.position[1] <= t.dec_bounds[1]):
                 t.AddStar(self)
 
 class Tile:
-    def __init__(self, ra_bounds, dec_bounds, index):
+    def __init__(self, ra_bounds, dec_bounds, index,resolution):
         self.ra_bounds = ra_bounds
         self.dec_bounds= dec_bounds
         self.stars=[]
         self.index = index
+        self.resolution = resolution
 
     def AddStar(self, Star):
         self.stars.append(Star)
 
+def init():
+    tileDec=np.linspace(-90, 90, 36+1)
+    tileRA=np.linspace(0, 360, 72+1)
+
+    #Intializing tiles 
+    tiles = []
+    for i in range(36*72):
+        c = i%(36)
+        r = int(i/(36)) 
+        tiles.append(Tile((tileRA[r],tileRA[r+1]),(tileDec[c],tileDec[c+1]),i,28))
+    
+    Stars = []
+
+    for i in range(len(ra)):
+        Stars.append(Star(ra[i],dec[i],Mag))
+        Stars[i].InTile(tiles)
+    
+    return Stars,tiles
 
 
+def blur(tile):
+    """
+    Function that blurs out the point source depending on the magnitude and size
+    """
+    pixels = np.zeros([tile.resolution,tile.resolution])
+    stars = tile.stars
+    ra = tile.ra_bounds
+    dec = tile.dec_bounds
+    for s in stars: 
+        ra_diff = s.position[0] - ra
+        dec_diff = s.position[1] - dec
+        pixels[ra_diff][dec_diff] = s.mag
+    return pixels
+
+#def magnitude
+#Function that calculates the size of the marker to plot based on magnitude
 def sizesBall(minim_mag):
     s = [None]*len(minim_mag)
     for i in range(len(minim_mag)): 
@@ -64,18 +99,20 @@ df = df[df.Mag <= 6.5] #Only stars visible by naked eye
 ra = np.asarray(df['RA'])
 dec = np.asarray(df['Dec'])
 Mag = np.asarray(df['Mag'])
+ra = (ra/24)*360 #to degrees
+
 
 Mag=np.abs(Mag)/max(Mag)
 print(max(Mag))
+
+
+init()
 
 #x = df.Mag #returns a numpy array
 #min_max_scaler = preprocessing.MinMaxScaler()
 #Mag_norm = min_max_scaler.fit_transform(x)
 
 #print(x)
-ra = np.asarray(df['RA'])
-ra = (ra/24)*360 #to degrees
-dec = np.asarray(df['Dec'])
 plt.scatter(ra,dec,marker='*',alpha=0.7)
 
 #plt.scatter(88.79,7.40,c='red',marker='*',alpha=0.3)
@@ -83,21 +120,6 @@ plt.scatter(ra,dec,marker='*',alpha=0.7)
 #plt.scatter(78.63,-8.20,c='red',marker='*',alpha=0.3)
 #plt.show()
 
-tileDec=np.linspace(-90, 90, 36)
-tileRA=np.linspace(0, 360, 72)
-print(ra)
-print(dec)
-
-
-
-
-tiles=[]
-
-for i,val in enumerate(tileRA):
-    for j, val2 in enumerate(tileDec):
-        if (ra[i] > tileRA[i] and ra[i+1] < tileRA[i+1]) and (dec[j] > tileDec[j] and dec[i+1] < tileDec[i+1]):
-            tiles[i].append(ra[i], dec[i], mag[i])
 
 #plt.plot(tiles[2][0], tiles[2][1])
-print(tiles)
 #plt.show()
