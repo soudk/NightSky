@@ -33,7 +33,7 @@ for i,file in enumerate(glob.glob("tiles/*.jpg")):
     rot_image = imutils.rotate(image, angle)
     rot_image = imutils.resize(rot_image, width = int(width*side_length_factor), height = int(height*side_length_factor))
     
-    scipy.misc.toimage(rot_image, cmin=0.0, cmax=1.0).save('rot_tiles/' + str(split[1]) + '_'+ 'rot' +'_' +str(angle) + '.jpg')
+    scipy.misc.toimage(rot_image, cmin=0.0, cmax=1.0).save('rot_tiles/' + str(split[1]) + '_'+ 'rot' +'_' +str(angle) + '_' + 'zoom' + '_' + str(side_length_factor) + '.jpg')
 
 	#cv2.imwrite('rot_tiles/' +str(file) + str(i) + 'rot' + str(angle) + '.jpg', rot_image)
 
