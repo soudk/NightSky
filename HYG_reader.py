@@ -85,30 +85,6 @@ def blur(tile):
         pixels[int(np.round(ra_diff%(RESOLUTION_PER_TILE-1)))][int(np.round(dec_diff%(RESOLUTION_PER_TILE-1)))] = s.mag
     return pixels
 
-#def magnitude
-#Function that calculates the size of the marker to plot based on magnitude
-def sizesBall(minim_mag):
-    s = [None]*len(minim_mag)
-    for i in range(len(minim_mag)): 
-        if 0.0 <= minim_mag[i] and minim_mag[i] <=0.05: 
-            s[i] = 50
-        elif 0.05 < minim_mag[i] and minim_mag[i] <= 0.1:
-            s[i] = 10
-        elif 0.1 < minim_mag[i] and minim_mag[i] <= 0.15:
-            s[i] = 0.05
-        elif 0.15 < minim_mag[i] and minim_mag[i] <= 0.2:
-            s[i] = .1
-        elif 0.2 < minim_mag[i] and minim_mag[i] <=0.25:
-            s[i] = 0.05
-        elif 0.25 < minim_mag[i] and minim_mag[i] <= 0.3:
-            s[i] = .001
-        elif 0.3 < minim_mag[i] and minim_mag[i] <= 0.4:
-            s[i] = .00001
-        elif 0.4 < minim_mag[i] and minim_mag[i] <= 0.5:
-            s[i] = .0000001
-    return s
-
-
 
 Betelgeuse = SkyCoord('05h55m10.30536s +07d24m25.4304s')
 Belt = SkyCoord('05h36m12.8s -01d12m07.00s')
@@ -140,9 +116,9 @@ print (len(tiles))
 for tile in tiles:
     pizels = blur(tile)
     if tile.shift_type is not None:
-        scipy.misc.toimage(pizels, cmin=0.0, cmax=1.0).save('tiles/tile'+str(tile.index)+'_'+tile.shift_type+str(tile.shift)+'.jpg')
+        scipy.misc.toimage(pizels, cmin=0.0, cmax=1.0).save('tiles/tile_'+str(tile.index)+'_'+tile.shift_type+str(tile.shift)+'.jpg')
     else: 
-        scipy.misc.toimage(pizels, cmin=0.0, cmax=1.0).save('tiles/tile'+str(tile.index)+'_'+str(tile.shift)+'.jpg')
+        scipy.misc.toimage(pizels, cmin=0.0, cmax=1.0).save('tiles/tile_'+str(tile.index)+'_'+str(tile.shift)+'.jpg')
 
 
 
@@ -154,8 +130,8 @@ for tile in tiles:
 #Mag_norm = min_max_scaler.fit_transform(x)
 
 #print(x)
-#plt.scatter(ra,dec,marker='*',alpha=0.7)
-
+plt.scatter(ra,dec,marker='*',alpha=0.7)
+plt.show()
 #plt.scatter(88.79,7.40,c='red',marker='*',alpha=0.3)
 #plt.scatter(84.04,-1.20,c='red',marker='*',alpha=0.3)
 #plt.scatter(78.63,-8.20,c='red',marker='*',alpha=0.3)
