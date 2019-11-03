@@ -39,7 +39,7 @@ def init():
     Stars = []
 
     for i in range(len(ra)):
-        Stars.append(Star(ra[i],dec[i],Mag))
+        Stars.append(Star(ra[i],dec[i],Mag[i]))
         Stars[i].InTile(tiles)
     
     return Stars,tiles
@@ -54,9 +54,9 @@ def blur(tile):
     ra = tile.ra_bounds
     dec = tile.dec_bounds
     for s in stars: 
-        ra_diff = s.position[0] - ra
-        dec_diff = s.position[1] - dec
-        pixels[ra_diff][dec_diff] = s.mag
+        ra_diff = s.position[0] - ra[0]
+        dec_diff = s.position[1] - dec[0]
+        pixels[int(ra_diff)][int(dec_diff)] = s.mag
     return pixels
 
 #def magnitude
@@ -102,21 +102,25 @@ Mag = np.asarray(df['Mag'])
 ra = (ra/24)*360 #to degrees
 
 
-for i,m in enumerate(Mag):
-    Mag[i] = 1.0 - ((m+abs(min(Mag)))/(max(Mag)+abs(min(Mag))))
+#for i,m in enumerate(Mag):
+#    Mag[i] = 1.0 - ((m+abs(min(Mag)))/(max(Mag)+abs(min(Mag))))
 
 #Mag=np.abs(Mag)/max(Mag)
-print(min(Mag), max(Mag))
+#print(min(Mag), max(Mag))
 
 
-init()
+Stars, tiles = init()
+pizels = blur(tiles[-7])
+print (pizels)
+
+
 
 #x = df.Mag #returns a numpy array
 #min_max_scaler = preprocessing.MinMaxScaler()
 #Mag_norm = min_max_scaler.fit_transform(x)
 
 #print(x)
-plt.scatter(ra,dec,marker='*',alpha=0.7)
+#plt.scatter(ra,dec,marker='*',alpha=0.7)
 
 #plt.scatter(88.79,7.40,c='red',marker='*',alpha=0.3)
 #plt.scatter(84.04,-1.20,c='red',marker='*',alpha=0.3)
