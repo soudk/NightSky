@@ -5,7 +5,11 @@ import pandas as pd
 from sklearn import preprocessing
 import scipy.misc
 
+<<<<<<< HEAD
 #Gridlines to specify how we split the night sky 
+=======
+
+>>>>>>> e984e0b7c7fc4232a92b928c0e6731f8cbdd6c45
 WIDTH_SKY = 12
 HEIGHT_SKY = 12
 
@@ -128,9 +132,9 @@ print (len(tiles))
 for tile in tiles:
     pizels = blur(tile)
     if tile.shift_type is not None:
-        scipy.misc.toimage(pizels, cmin=0.0, cmax=1.0).save('tiles/tile_'+str(tile.index)+'_'+tile.shift_type+str(tile.shift)+'.jpg')
+        scipy.misc.toimage(pizels, cmin=0.0, cmax=1.0).save('tiles/tile_'+str(tile.index)+'_'+tile.shift_type+'_'+str(tile.shift)+'.jpg')
     else: 
-        scipy.misc.toimage(pizels, cmin=0.0, cmax=1.0).save('tiles/tile_'+str(tile.index)+'_'+str(tile.shift)+'.jpg')
+        scipy.misc.toimage(pizels, cmin=0.0, cmax=1.0).save('tiles/tile_'+str(tile.index)+'_'+'noshift_'+str(0)+'.jpg')
 
 
 
